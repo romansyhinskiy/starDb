@@ -2,13 +2,13 @@ import React, {Component} from 'react';
 
 import Header from '../header';
 import RandomPlanet from '../random-planet';
-import PeoplePage from '../people-page/people-page'
 
 
 import './app.css';
 import SwapiService from "../../services/swapi-service";
-import ItemList from "../item-list";
-import PersonDetails from "../person-details";
+import ErrorBoundary from "../error-boundary/error-boundary";
+import Row from "../Row/Row";
+import ItemDetails, {Record} from "../item-details/item-details";
 
 export default class App extends Component {
 
@@ -18,45 +18,44 @@ export default class App extends Component {
         selectedPerson: null
     }
 
-
     render() {
+
+        const {getPerson, getStarship, getPeronImage, getStarshipImage} = this.swapi
+
+        const personDetails = (
+            <ItemDetails
+                itemId={11}
+                getData={getPerson}
+                getImageUrl={getPeronImage}
+            >
+                <Record  field='gender' label='Gender'/>
+                <Record  field='eyeColor' label='Eye Color'/>
+            </ItemDetails>
+        )
+
+        const starshipDetails = (
+            <ItemDetails
+                itemId={5}
+                getData={getStarship}
+                getImageUrl={getStarshipImage}
+            >
+                <Record  field='name' label='Name'/>
+                <Record  field='manufacturer' label='Manufacturer'/>
+                <Record  field='length' label='Length'/>
+            </ItemDetails>
+        )
+
         return (
-            <div>
+            <ErrorBoundary>
                 <Header/>
                 <RandomPlanet/>
 
-                <PeoplePage/>
+                <Row
+                    left={personDetails}
+                    right={starshipDetails}
+                />
 
-                {/*<br/><br/>*/}
-
-                {/*<div className="row mb2">*/}
-                {/*    <div className="col-md-6">*/}
-                {/*        <ItemList*/}
-                {/*            onItemSelected={this.onPersonSelect}*/}
-                {/*            getData={this.swapi.getAllPlanets}*/}
-                {/*            renderItem={(item)=> item.name}*/}
-                {/*        />*/}
-                {/*    </div>*/}
-                {/*    <div className="col-md-6">*/}
-                {/*        <PersonDetails personId={this.state.selectedPerson}/>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
-
-                {/*<br/><br/>*/}
-
-                {/*<div className="row mb2">*/}
-                {/*    <div className="col-md-6">*/}
-                {/*        <ItemList*/}
-                {/*            onItemSelected={this.onPersonSelect}*/}
-                {/*            getData={this.swapi.getAllStarships}*/}
-                {/*            renderItem={(item)=> item.name}*/}
-                {/*        />*/}
-                {/*    </div>*/}
-                {/*    <div className="col-md-6">*/}
-                {/*        <PersonDetails personId={this.state.selectedPerson}/>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
-            </div>
+            </ErrorBoundary>
         )
     }
 }
